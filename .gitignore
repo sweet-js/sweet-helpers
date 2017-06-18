@@ -1,3 +1,10 @@
+/combinators.js
+/helpers.js
+/parser.js
+/either.js
+/maybe.js
+
+
 lib-cov
 *.seed
 *.log
@@ -28,4 +35,3 @@ _site
 .projectile
 .nyc_output
 coverage
-dist/
