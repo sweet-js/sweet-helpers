@@ -1,12 +1,13 @@
 {
   "name": "@sweet-js/helpers",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A helper library for writing Sweet macros",
   "main": "helpers.js",
   "scripts": {
     "pretest": "flow",
     "test": "BABEL_ENV=test ava test",
-    "build": "babel --out-dir . src"
+    "build": "babel --out-dir . src",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
