@@ -159,6 +159,10 @@ export function isRegExp(obj: Term) {
   return check(obj, TypeCodes.RegExp);
 }
 
+export function isDelimiter(obj: Term) {
+  return obj && obj.type === 'RawDelimiter';
+}
+
 export function isParens(obj: Term) {
   return obj && obj.type === 'RawDelimiter' && obj.kind === 'parens';
 }
