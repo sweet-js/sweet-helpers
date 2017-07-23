@@ -13,6 +13,8 @@ interface Context<T> {
 
   mark(): Mark;
 
+  contextify(T): Context<T>;
+
   reset(Mark): void;
 }
 
@@ -50,7 +52,6 @@ export default class Parser<A, C> {
   run(ctx: ImmutableContext<*>): Either<string, [A, ImmutableContext<*>]> {
     return this.runner(ctx);
   }
-
 
   // $FlowFixMe: computed properties still not supported in flow
   static ['fantasy-land/of'](a: A): Parser<A, *> {
