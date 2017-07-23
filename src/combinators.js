@@ -24,3 +24,18 @@ export const template = Parser.sat(H.isTemplate, 'template');
 export const templateWith = (pred: Term => boolean) => Parser.sat(obj => H.isTemplate(obj) && pred(unsafeProp('value', H.unwrap(obj))), 'template');
 export const regex = Parser.sat(H.isRegExp, 'regex');
 export const regexWith = (pred: Term => boolean) => Parser.sat(obj => H.isRegExp(obj) && pred(unsafeProp('value', H.unwrap(obj))), 'regex');
+
+export function lift2<A, B, C>(f: (A, B) => C): (a: Parser<A, *>, b: Parser<B, *>) => Parser<C, *> {
+  return (a, b) => a.chain(va => b.chain(vb => Parser.of(f(va, vb))));
+}
+
+export function sequence<A>(...parsers: Parser<A, *>[]): Parser<A[], *> {
+  let init: Parser<A[], *> = Parser.of([]);
+  let f: (Parser<A[], *>, Parser<A, *>) => Parser<A[], *> = lift2((a, b) => a.concat(b));
+  return parsers.reduce(f, init);
+}
+
+export function disj<A>(a: Parser<A, *>, b: Parser<A, *>, msg: string = 'failed disjunction'): Parser<A, *> {
+  return a.alt(b).alt(Parser.failure(msg));
+}
+

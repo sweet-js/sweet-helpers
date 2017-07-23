@@ -91,17 +91,6 @@ export default class Parser<A, C> {
       .chain(item => f(item) ? Parser.of(item) : Parser.failure(msg));
   }
 
-
-  static lift2<A, B, C>(f: (A, B) => C): (a: Parser<A, *>, b: Parser<B, *>) => Parser<C, *> {
-    return (a, b) => a.chain(va => b.chain(vb => Parser.of(f(va, vb))));
-  }
-
-  static sequence(...parsers: Parser<A, C>[]): Parser<A[], C> {
-    let init: Parser<A[], C> = Parser.of([]);
-    let f: (Parser<A[], C>, Parser<A, C>) => Parser<A[], C> = Parser.lift2((a, b) => a.concat(b));
-    return parsers.reduce(f, init);
-  }
-
   // $FlowFixMe: computed properties still not supported in flow
   ['fantasy-land/ap']<B>(parser: Parser<A => B, C>): Parser<B, C> {
     return this.ap(parser);
@@ -129,18 +118,15 @@ export default class Parser<A, C> {
   }
 
   alt(other: Parser<A, C>): Parser<A, C> {
-    return Parser.disj(this, other);
-  }
-
-  static disj<A, C>(a: Parser<A, C>, b: Parser<A, C>, msg: string = 'failed disjunction'): Parser<A, C> {
     return new Parser(ctx => {
-      let r = a.run(ctx);
+      let r = this.run(ctx);
       if (r instanceof Left) {
-        return b.run(ctx).bimap(l => msg, r => r);
+        return other.run(ctx);
       }
       return r;
     });
   }
+
 
   // $FlowFixMe: computed properties still not supported in flow
   ['fantasy-land/chain']<B>(f: A => Parser<B, *>): Parser<B, *> {
