@@ -64,6 +64,25 @@ export function parensInner(p: Parser<*, Term>) {
   return runParserInner(p, H.isParens);
 }
 
+export function many<A>(p: Parser<A, *>): Parser<A[], *> {
+  return p.chain(x => many(p).chain(xs => Parser.of(xs.concat(x)))).alt(Parser.of([]));
+}
+
+export function many1<A>(p: Parser<A, *>): Parser<A[], *> {
+  return p.chain(x => many(p).chain(xs => Parser.of(xs.concat(x))));
+}
+
+export function sepBy1<A, B>(p: Parser<A, *>, sep: Parser<B, *>): Parser<A[], *> {
+  return p.chain(x => 
+    many1(sep.chain(() => p.chain(y => Parser.of(y))))
+      .chain(xs => Parser.of(xs.concat(x)))
+  );
+}
+
+export function sepBy<A, B>(p: Parser<A, *>, sep: Parser<B, *>): Parser<A[], *> {
+  return sepBy1(p, sep).alt(Parser.of([]));
+}
+
 export function lift2<A, B, C>(f: (A, B) => C): (a: Parser<A, *>, b: Parser<B, *>) => Parser<C, *> {
   return (a, b) => a.chain(va => b.chain(vb => Parser.of(f(va, vb))));
 }
@@ -78,3 +97,13 @@ export function disj<A>(a: Parser<A, *>, b: Parser<A, *>, msg: string = 'failed 
   return a.alt(b).alt(Parser.failure(msg));
 }
 
+export function infixl<A>(p: Parser<A, *>, op: Parser<(A, A) => A, *>): Parser<A, *> {
+  function rest(x) {
+    return op.chain(f => p.chain(y => rest(f(x, y)))).alt(Parser.of(x));
+  }
+  return p.chain(rest);
+}
+
+export function infixr<A>(p: Parser<A, *>, op: Parser<(A, A) => A, *>): Parser<A, *> {
+  return p.chain(x => op.chain(f => infixr(p, op).chain(y => Parser.of(f(x, y)))).alt(Parser.of(x)));
+}
