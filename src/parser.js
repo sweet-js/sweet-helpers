@@ -19,12 +19,13 @@ interface Context<T> {
 export class ImmutableContext<T> {
   ctx: Context<T>;
   value: Maybe<T>;
+  mark: Mark;
 
   constructor(ctx: Context<T>) {
     this.ctx = ctx;
-    let mark = ctx.mark();
+    this.mark = ctx.mark();
     let v = ctx.next();
-    ctx.reset(mark);
+    ctx.reset(this.mark);
     this.value = v.done ? new Nothing() : Maybe.of(v.value);
   }
 
@@ -33,6 +34,7 @@ export class ImmutableContext<T> {
   }
 
   rest(): ImmutableContext<T> {
+    this.ctx.reset(this.mark);
     this.ctx.next();
     return new ImmutableContext(this.ctx); 
   }
