@@ -75,13 +75,24 @@ export default class Parser<A, C> {
     return Parser.failure('');
   }
 
+  static empty(): Parser<void, *> {
+    return new Parser(ctx => {
+      let i = ctx.head();
+      if (i instanceof Nothing) {
+        return Either.of([void 0, ctx.rest()]);
+      } else {
+        return new Left('token stream is not empty');
+      }
+    });
+  }
+
   static item(): Parser<*, *> {
     return new Parser(ctx => {
       let i = ctx.head();
       if (i instanceof Just) {
         return Either.of([i.value, ctx.rest()]);
       } else {
-        return new Left('');
+        return new Left('no more tokens to consume');
       }
     });
   }
