@@ -66,3 +66,10 @@ test('can make a new tree type out of existing combinators', t => {
   let oneTree = one.map(n => ({ type: 'number', value: n }));
   t.deepEqual(oneTree.run(MockContext.of(1)).right[0], { type: 'number', value: 1 });
 });
+
+test('an alternate sequence of a failed sequence matches', t => {
+  let ctx = MockContext.of(1, 2);
+  let first = C.sequence(Parser.item(), Parser.item(), Parser.zero());
+  let second = C.sequence(Parser.item(), Parser.item());
+  t.deepEqual(first.alt(second).run(ctx).right[0], [1, 2]);
+});
