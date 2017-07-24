@@ -4,6 +4,8 @@
 /either.js
 /maybe.js
 
+_build/
+_build_html/
 
 lib-cov
 *.seed
