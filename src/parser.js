@@ -43,14 +43,17 @@ export class ImmutableContext<T> {
 }
 
 export default class Parser<A, C> {
-  runner: ImmutableContext<C> => Either<string, [A, ImmutableContext<C>]>;
+  _runner: ImmutableContext<C> => Either<string, [A, ImmutableContext<C>]>;
 
   constructor(runner: ImmutableContext<C> => Either<string, [A, ImmutableContext<C>]>) {
-    this.runner = runner;
+    this._runner = runner;
   }
   
-  run(ctx: ImmutableContext<*>): Either<string, [A, ImmutableContext<*>]> {
-    return this.runner(ctx);
+  run(ctx: ImmutableContext<*> | Context<*>): Either<string, [A, ImmutableContext<*>]> {
+    if (!(ctx instanceof ImmutableContext)) {
+      ctx = new ImmutableContext(ctx);
+    }
+    return this._runner(ctx);
   }
 
   // $FlowFixMe: computed properties still not supported in flow
