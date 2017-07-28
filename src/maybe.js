@@ -20,7 +20,7 @@ export class Maybe<T> {
   static empty(): Maybe<T> {
     return new Nothing;
   }
-  
+
   // $FlowFixMe: computed properties still not supported in flow
   static ['fantasy-land/zero'](): Maybe<T> {
     return Maybe.zero();
@@ -28,6 +28,14 @@ export class Maybe<T> {
 
   static zero(): Maybe<T> {
     return new Nothing;
+  }
+
+  static isJust(v: Maybe<*>): boolean {
+    return v instanceof Just;
+  }
+
+  static isNothing(v: Maybe<*>): boolean {
+    return v instanceof Nothing;
   }
 
   // $FlowFixMe: computed properties still not supported in flow
