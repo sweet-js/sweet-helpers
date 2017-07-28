@@ -2,7 +2,6 @@
 // @flow
 
 export class Maybe<T> {
-
   // $FlowFixMe: computed properties still not supported in flow
   static ['fantasy-land/of'](v: T): Maybe<T> {
     return Maybe.of(v);
@@ -18,7 +17,7 @@ export class Maybe<T> {
   }
 
   static empty(): Maybe<T> {
-    return new Nothing;
+    return new Nothing();
   }
 
   // $FlowFixMe: computed properties still not supported in flow
@@ -27,7 +26,7 @@ export class Maybe<T> {
   }
 
   static zero(): Maybe<T> {
-    return new Nothing;
+    return new Nothing();
   }
 
   static isJust(v: Maybe<*>): boolean {
@@ -48,11 +47,11 @@ export class Maybe<T> {
   }
 
   // $FlowFixMe: computed properties still not supported in flow
-  ['fantasy-land/ap']<V>(other: Maybe<T => V>): Maybe<V> {
+  ['fantasy-land/ap']<V>(other: Maybe<(T) => V>): Maybe<V> {
     return this.ap(other);
   }
 
-  ap<V>(other: Maybe<T => V>): Maybe<V> {
+  ap<V>(other: Maybe<(T) => V>): Maybe<V> {
     throw new Error();
   }
 
@@ -71,7 +70,7 @@ export class Nothing<T> extends Maybe<T> {
     return Maybe.empty();
   }
 
-  ap<V>(other: Maybe<T => V>): Maybe<V> {
+  ap<V>(other: Maybe<(T) => V>): Maybe<V> {
     return Maybe.empty();
   }
 
@@ -92,7 +91,7 @@ export class Just<T> extends Maybe<T> {
     return new Just(f(this.value));
   }
 
-  ap<V>(other: Maybe<T => V>): Maybe<V> {
+  ap<V>(other: Maybe<(T) => V>): Maybe<V> {
     if (other instanceof Just) {
       return Maybe.of(other.value(this.value));
     }
