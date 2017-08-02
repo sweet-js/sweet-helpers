@@ -7,8 +7,12 @@
     "pretest": "flow && npm run build",
     "test": "BABEL_ENV=test ava test",
     "build": "babel --out-dir . src",
-    "prepublish": "npm run build"
+    "prepare": "npm run build && for i in src/*.js; do cp \"$i\" \"./$(basename $i).flow\"; done;"
   },
+  "files": [
+    "*.js",
+    "*.flow"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sweet-js/sweet-helpers.git"
