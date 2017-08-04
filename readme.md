@@ -8,4 +8,4 @@ Install with npm:
 npm install @sweet-js/helpers
 ```
 
-Documentation is available [here]().
+Documentation is available [here](http://sweet-helpers.readthedocs.io/en/latest/).
