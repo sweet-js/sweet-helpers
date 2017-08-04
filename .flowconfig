@@ -1,5 +1,4 @@
 [ignore]
-<PROJECT_ROOT>/helpers.js
 <PROJECT_ROOT>/node_modules
 
 [include]
